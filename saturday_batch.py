@@ -40,7 +40,7 @@ client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
 # Delay between Claude calls to stay within free tier rate limits
 # 30,000 tokens/min limit — 90 second pause keeps us well clear
-CALL_DELAY_SECONDS = 180
+CALL_DELAY_SECONDS = 360
 
 def wait():
     """Pause between Claude calls to respect rate limits."""
