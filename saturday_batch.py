@@ -177,7 +177,7 @@ Include:
 - Full spoken script
 
 """
-    return claude_no_search(LONGFORM_SYSTEM, prompt, max_tokens=4000)
+    return claude_no_search(get_longform_system(PLAN_DAY)., prompt, max_tokens=4000)
 
 
 # ─────────────────────────────────────────────
