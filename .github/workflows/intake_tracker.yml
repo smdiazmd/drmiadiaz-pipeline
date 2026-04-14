@@ -1,0 +1,23 @@
+name: Intake CTA Tracker
+
+on:
+  schedule:
+    - cron: '0 13 * * 1'   # Monday 8:00 AM ET (13:00 UTC) — runs after analytics
+  workflow_dispatch:
+
+jobs:
+  intake-tracker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install anthropic
+      - run: python intake_tracker.py
+        env:
+          ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
+          GMAIL_ADDRESS:      ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          MIA_EMAIL:          ${{ secrets.MIA_EMAIL }}
+          LATER_API_KEY:      ${{ secrets.LATER_API_KEY }}
