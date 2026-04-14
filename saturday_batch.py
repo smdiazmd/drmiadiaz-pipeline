@@ -29,7 +29,7 @@ from shared.config import (
 from shared.prompts import (
     get_short_form_system, get_longform_system, get_caption_system,
     get_story_system, get_intro_system,
-    TREND_SYSTEM, COLLAB_SYSTEM
+    TREND_SYSTEM, COLLAB_SYSTEM, BIO_SYSTEM
 )
 from shared.email_utils import (
     send_email, email_header, email_section,
