@@ -1,0 +1,28 @@
+name: Saturday Batch Brief
+
+on:
+  schedule:
+    - cron: '0 10 * * 6'   # Saturday 6:00 AM ET (10:00 UTC)
+  workflow_dispatch:
+
+jobs:
+  saturday-batch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install anthropic
+      - run: python saturday_batch.py
+        env:
+          ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
+          GMAIL_ADDRESS:      ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          MIA_EMAIL:          ${{ secrets.MIA_EMAIL }}
+          JAKE_EMAIL:         ${{ secrets.JAKE_EMAIL }}
+          YOUTUBE_API_KEY:    ${{ secrets.YOUTUBE_API_KEY }}
+          YOUTUBE_CHANNEL_ID: ${{ secrets.YOUTUBE_CHANNEL_ID }}
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_ACCOUNT_ID:   ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
+          TIKTOK_ACCESS_TOKEN:    ${{ secrets.TIKTOK_ACCESS_TOKEN }}
