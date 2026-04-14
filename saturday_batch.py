@@ -40,7 +40,7 @@ client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
 # Delay between Claude calls to stay within free tier rate limits
 # 30,000 tokens/min limit — 90 second pause keeps us well clear
-CALL_DELAY_SECONDS = 90
+CALL_DELAY_SECONDS = 180
 
 def wait():
     """Pause between Claude calls to respect rate limits."""
@@ -61,7 +61,7 @@ NEXT_MONDAY = TODAY + timedelta(days=(7 - TODAY.weekday()) % 7 or 7)
 def claude(system: str, prompt: str, max_tokens: int = 2000) -> str:
     """Call Claude with web search enabled."""
     msg = client.messages.create(
-        model="claude-opus-4-5",
+        model="claude-sonnet-4-5",
         max_tokens=max_tokens,
         system=system,
         tools=[{"type": "web_search_20250305", "name": "web_search"}],
@@ -73,7 +73,7 @@ def claude(system: str, prompt: str, max_tokens: int = 2000) -> str:
 def claude_no_search(system: str, prompt: str, max_tokens: int = 2000) -> str:
     """Call Claude without web search (faster for generation tasks)."""
     msg = client.messages.create(
-        model="claude-opus-4-5",
+        model="claude-sonnet-4-5",
         max_tokens=max_tokens,
         system=system,
         messages=[{"role": "user", "content": prompt}]
