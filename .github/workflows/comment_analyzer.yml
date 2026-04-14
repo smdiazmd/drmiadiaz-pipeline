@@ -1,0 +1,29 @@
+name: Comment Analyzer
+
+on:
+  schedule:
+    - cron: '0 14 * * *'   # Daily 9:00 AM ET (14:00 UTC)
+  workflow_dispatch:
+
+jobs:
+  comment-analyzer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install anthropic
+      - run: python comment_analyzer.py
+        env:
+          ANTHROPIC_API_KEY:   ${{ secrets.ANTHROPIC_API_KEY }}
+          GMAIL_ADDRESS:       ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD:  ${{ secrets.GMAIL_APP_PASSWORD }}
+          MIA_EMAIL:           ${{ secrets.MIA_EMAIL }}
+          JAKE_EMAIL:          ${{ secrets.JAKE_EMAIL }}
+          CRISIS_ALERT_EMAIL:  ${{ secrets.CRISIS_ALERT_EMAIL }}
+          YOUTUBE_API_KEY:     ${{ secrets.YOUTUBE_API_KEY }}
+          YOUTUBE_CHANNEL_ID:  ${{ secrets.YOUTUBE_CHANNEL_ID }}
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_ACCOUNT_ID:   ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
+          TIKTOK_ACCESS_TOKEN:    ${{ secrets.TIKTOK_ACCESS_TOKEN }}
