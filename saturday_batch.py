@@ -27,9 +27,9 @@ from shared.config import (
     is_first_week, get_this_weeks_longform
 )
 from shared.prompts import (
-    SHORT_FORM_SYSTEM, LONGFORM_SYSTEM, CAPTION_SYSTEM,
-    STORY_SYSTEM, TREND_SYSTEM, COLLAB_SYSTEM,
-    INTRO_SYSTEM, BIO_SYSTEM
+    get_short_form_system, get_longform_system, get_caption_system,
+    get_story_system, get_intro_system,
+    TREND_SYSTEM, COLLAB_SYSTEM
 )
 from shared.email_utils import (
     send_email, email_header, email_section,
@@ -110,13 +110,7 @@ Rank by confidence score (highest first).
 
 def generate_short_form_scripts(trends: str) -> str:
     print("  Generating short-form scripts...")
-
-    cta_note = ""
-    if CTA_ACTIVE:
-        cta_note = f"\n\nIMPORTANT: For at least one script, end with this Welmivia CTA: '{WELMIVIA_CTA}'"
-    elif PLAN_PHASE in ("scale", "establish") and PLAN_DAY >= 45:
-        cta_note = f"\n\nFor at least one script, include this natural mention: '{SOFT_WELMIVIA_CTA}'"
-
+  
     intro_note = ""
     if FIRST_WEEK:
         intro_note = """
@@ -143,9 +137,8 @@ SCRIPT 1: [trend name] | Format: [Doctor Reacts/etc] | Confidence: [score]/10
 SCRIPT 2: ...
 etc.
 
-{cta_note}
 """
-    return claude_no_search(SHORT_FORM_SYSTEM, prompt, max_tokens=3000)
+    return claude_no_search(get_short_form_system(PLAN_DAY), prompt, max_tokens=3000)
 
 
 # ─────────────────────────────────────────────
@@ -166,8 +159,6 @@ def generate_longform_script() -> str:
         video_type = "standard"
         length_note = "8–12 minutes"
 
-    cta_note = f"End with Welmivia CTA: '{WELMIVIA_CTA}'" if CTA_ACTIVE else "No Welmivia CTA yet — pure education."
-
     intro_note = "WEEK 1 NOTE: This is the launch week YouTube video. Open with Mia's full channel intro before the main content." if FIRST_WEEK else ""
 
     prompt = f"""
@@ -185,7 +176,6 @@ Include:
 - YouTube end card suggestion
 - Full spoken script
 
-{cta_note}
 """
     return claude_no_search(LONGFORM_SYSTEM, prompt, max_tokens=4000)
 
@@ -236,7 +226,7 @@ LINKEDIN:
 Always append the full disclaimer at the end of every caption.
 Disclaimer: {DISCLAIMER}
 """
-    return claude_no_search(CAPTION_SYSTEM, prompt, max_tokens=3000)
+    return claude_no_search(get_caption_system(PLAN_DAY), prompt, max_tokens=3000)
 
 
 # ─────────────────────────────────────────────
@@ -296,7 +286,7 @@ Interactive element: ...
 DAY 2 — Tuesday [date] — [Type]
 ...etc
 """
-    return claude_no_search(STORY_SYSTEM, prompt, max_tokens=2000)
+    return claude_no_search(get_story_system(PLAN_DAY), prompt, max_tokens=2000)
 
 
 # ─────────────────────────────────────────────
@@ -339,7 +329,7 @@ Include:
 These are the very first things her audience will see. Make them unforgettable.
 Lead with value and POV, not biography.
 """
-    return claude_no_search(INTRO_SYSTEM, prompt, max_tokens=2000)
+    return claude_no_search(get_intro_system(PLAN_DAY), prompt, max_tokens=2000)
 
 
 def generate_bios() -> str:
