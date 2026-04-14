@@ -16,6 +16,7 @@ Generates everything Jake needs before Sunday filming:
 import anthropic
 import json
 import random
+import time
 from datetime import datetime, date, timedelta
 from shared.config import (
     ANTHROPIC_API_KEY, JAKE_EMAIL, MIA_EMAIL,
@@ -36,6 +37,15 @@ from shared.email_utils import (
 )
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+
+# Delay between Claude calls to stay within free tier rate limits
+# 30,000 tokens/min limit — 90 second pause keeps us well clear
+CALL_DELAY_SECONDS = 90
+
+def wait():
+    """Pause between Claude calls to respect rate limits."""
+    print(f"  Waiting {CALL_DELAY_SECONDS}s to respect rate limits...")
+    time.sleep(CALL_DELAY_SECONDS)
 
 TODAY       = date.today()
 PLAN_DAY    = get_plan_day()
@@ -480,29 +490,36 @@ def main():
 
     print("Step 1/7 — Trend scan")
     trends = run_trend_scan()
+    wait()
 
     print("Step 2/7 — Short-form scripts")
     scripts = generate_short_form_scripts(trends)
+    wait()
 
     print("Step 3/7 — Long-form script")
     longform = generate_longform_script()
+    wait()
 
     print("Step 4/7 — Platform captions")
     captions = generate_captions(scripts)
+    wait()
 
     print("Step 5/7 — Posting schedule")
     schedule_rows = generate_posting_schedule()
 
     print("Step 6/7 — Instagram stories")
     stories = generate_stories()
+    wait()
 
     print("Step 7/7 — Collab radar")
     collabs = generate_collab_radar()
 
     intro, bios = None, None
     if FIRST_WEEK:
+        wait()
         print("Week 1 — Generating intro content + bios")
         intro = generate_intro_content()
+        wait()
         bios  = generate_bios()
 
     print("Sending email...")
